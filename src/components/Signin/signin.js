@@ -30,7 +30,6 @@ const Signin = ({ onRouteChange }) => {
                         className="f6 link dim black db pointer"
                         >Register
                     </p>
-
                     </div>
                 </div>
             </main>
