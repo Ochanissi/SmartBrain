@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import Navigation from './components/Navigation/Navigation';
-import Signin from './components/Signin/Signin';
-import Register from './components/Register/Register';
-import Logo from './components/Logo/Logo';
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Rank from './components/Rank/Rank';
+import FaceRecognition from './components/FaceRecognition/facerecognition';
+import Navigation from './components/Navigation/navigation';
+import Signin from './components/Signin/signin';
+import Register from './components/Register/register';
+import Logo from './components/Logo/logo';
+import ImageLinkForm from './components/ImageLinkForm/imagelinkform';
+import Rank from './components/Rank/rank';
 import './App.css';
 
 //You must add your own API key here from Clarifai.
