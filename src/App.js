@@ -75,17 +75,17 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-      fetch('http://localhost:3000/imageurl', {
-              method: 'post',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({
-                input: this.state.input
-              })
-            })
-            .then(response => response.json())
+      fetch('https://pacific-chamber-52865.herokuapp.com/imageurl', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          input: this.state.input
+        })
+      })
+      .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('http://localhost:3000/image', {
+          fetch('https://pacific-chamber-52865.herokuapp.com/image', {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -97,15 +97,17 @@ class App extends Component {
               this.setState(Object.assign(this.state.user, { entries: count}))
             })
             .catch(console.log)
+
         }
         this.displayFaceBox(this.calculateFaceLocation(response))
       })
       .catch(err => console.log(err));
   }
 
+
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState({inititalState})
+      this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})
     }
