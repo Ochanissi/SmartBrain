@@ -18,6 +18,10 @@ class Signin extends React.Component {
     this.setState({signInPassword: event.target.value})
   }
 
+  saveAuthTokenInSession = (token) => {
+    window.sessionStorage.setItem('token', token);
+  }
+
   onSubmitSignIn = () => {
     // fetch('https://pacific-chamber-52865.herokuapp.com/signin', {
     fetch('http://localhost:3000/signin', {
