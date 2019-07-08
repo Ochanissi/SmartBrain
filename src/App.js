@@ -116,7 +116,7 @@ class App extends Component {
       // fetch('https://pacific-chamber-52865.herokuapp.com/imageurl', {
       fetch('http://localhost:3000/imageurl', {
         method: 'post',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'Authorization': window.sessionStorage/getItem('token')},
         body: JSON.stringify({
           input: this.state.input
         })
