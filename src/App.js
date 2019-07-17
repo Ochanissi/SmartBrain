@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import Particles from 'react-particles-js';
-import FaceRecognition from './components/FaceRecognition/facerecognition';
-import Navigation from './components/Navigation/navigation';
-import Signin from './components/Signin/signin';
-import Register from './components/Register/register';
-import Logo from './components/Logo/logo';
-import ImageLinkForm from './components/ImageLinkForm/imagelinkform';
-import Rank from './components/Rank/rank';
-import Modal from './components/Modal/Modal';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import Navigation from './components/Navigation/Navigation';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
+import Logo from './components/Logo/Logo';
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import Rank from './components/Rank/Rank';
 import Profile from './components/Profile/Profile';
+import Modal from './components/Modal/Modal';
 import './App.css';
 
 const particlesOptions = {
@@ -24,19 +24,21 @@ const particlesOptions = {
 }
 
 const initialState = {
-    input: '',
-    imageUrl: '',
-    boxes: [],
-    route: 'signin',
-    isSignedIn: false,
-    isProfileOpen: false,
-    user: {
-      id: '',
-      name: '',
-      email: '',
-      entries: 0,
-      joined: ''
-    }
+  input: '',
+  imageUrl: '',
+  boxes: [],
+  route: 'signin',
+  isProfileOpen: false,
+  isSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: '',
+    age: 0,
+    pet: ''
+  }
 }
 
 class App extends Component {
@@ -49,32 +51,32 @@ class App extends Component {
     const token = window.sessionStorage.getItem('token');
     if (token) {
       fetch('http://localhost:3000/signin', {
-        method: 'post',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token
         }
       })
-        .then(resp => resp.json())
+        .then(response => response.json())
         .then(data => {
           if (data && data.id) {
             fetch(`http://localhost:3000/profile/${data.id}`, {
-              method: 'get',
+              method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
               }
             })
-              .then(resp => resp.json())
-              .then(user => {
-                if (user && user.email) {
-                  this.loadUser(user)
-                  this.onRouteChange('home');
-                }
-              })
+            .then(response => response.json())
+            .then(user => {
+              if (user && user.email) {
+                this.loadUser(user)
+                this.onRouteChange('home');
+              }
+            })
           }
         })
-          .catch(console.log)
+        .catch(console.log)
     }
   }
 
@@ -88,12 +90,12 @@ class App extends Component {
     }})
   }
 
-  calculateFaceLocations = (data) => {
+  calculateFaceLocation = (data) => {
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
     return data.outputs[0].data.regions.map(face => {
       const clarifaiFace = face.region_info.bounding_box;
-      const image = document.getElementById('inputimage');
-      const width = Number(image.width);
-      const height = Number(image.height);
       return {
         leftCol: clarifaiFace.left_col * width,
         topRow: clarifaiFace.top_row * height,
@@ -103,7 +105,7 @@ class App extends Component {
     });
   }
 
-  displayFaceBoxes = (boxes) => {
+  displayFaceBox = (boxes) => {
     this.setState({boxes: boxes});
   }
 
@@ -116,7 +118,10 @@ class App extends Component {
       // fetch('https://pacific-chamber-52865.herokuapp.com/imageurl', {
       fetch('http://localhost:3000/imageurl', {
         method: 'post',
-        headers: {'Content-Type': 'application/json', 'Authorization': window.sessionStorage/getItem('token')},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': window.sessionStorage.getItem('token')
+        },
         body: JSON.stringify({
           input: this.state.input
         })
@@ -127,7 +132,10 @@ class App extends Component {
           // fetch('https://pacific-chamber-52865.herokuapp.com/image', {
           fetch('http://localhost:3000/image', {
             method: 'put',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({
               id: this.state.user.id
             })
@@ -139,11 +147,10 @@ class App extends Component {
             .catch(console.log)
 
         }
-        this.displayFaceBoxes(this.calculateFaceLocations(response))
+        this.displayFaceBox(this.calculateFaceLocation(response))
       })
       .catch(err => console.log(err));
   }
-
 
   onRouteChange = (route) => {
     if (route === 'signout') {
@@ -155,32 +162,29 @@ class App extends Component {
   }
 
   toggleModal = () => {
-    this.setState(prevState => ({
-      ...this.state,
-      isProfileOpen: !prevState.isProfileOpen
-    }))
+    this.setState(state => ({
+      ...state,
+      isProfileOpen: !state.isProfileOpen,
+    }));
   }
 
   render() {
     const { isSignedIn, imageUrl, route, boxes, isProfileOpen, user } = this.state;
     return (
       <div className="App">
-         <Particles className='particles'
+        <Particles className='particles'
           params={particlesOptions}
         />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal} />
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/>
+        {
+          isProfileOpen &&
+          <Modal>
+            <Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} user={user} loadUser={this.loadUser} />
+          </Modal>
+        }
         { route === 'home'
           ? <div>
               <Logo />
-              { isProfileOpen && 
-                < Modal>
-                  <Profile 
-                    isProfileOpen={isProfileOpen} 
-                    toggleModal={this.toggleModal}
-                    loadUser={this.loadUser}
-                    user={user}/>
-                </Modal>
-              }
               <Rank
                 name={this.state.user.name}
                 entries={this.state.user.entries}
@@ -193,7 +197,7 @@ class App extends Component {
             </div>
           : (
              route === 'signin'
-             ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+             ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
              : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
             )
         }
