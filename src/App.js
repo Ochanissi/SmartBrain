@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import Particles from 'react-particles-js';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import Navigation from './components/Navigation/Navigation';
-import SignIn from './components/SignIn/SignIn';
-import Register from './components/Register/Register';
-import Logo from './components/Logo/Logo';
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Rank from './components/Rank/Rank';
-import Profile from './components/Profile/Profile';
-import Modal from './components/Modal/Modal';
-import './App.css';
+import React, { Component } from "react";
+import Particles from "react-particles-js";
+import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
+import Navigation from "./components/Navigation/Navigation";
+import SignIn from "./components/SignIn/SignIn";
+import Register from "./components/Register/Register";
+import Logo from "./components/Logo/Logo";
+import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
+import Rank from "./components/Rank/Rank";
+import Profile from "./components/Profile/Profile";
+import Modal from "./components/Modal/Modal";
+import "./App.css";
 
 const particlesOptions = {
   particles: {
@@ -21,25 +21,25 @@ const particlesOptions = {
       }
     }
   }
-}
+};
 
 const initialState = {
-  input: '',
-  imageUrl: '',
+  input: "",
+  imageUrl: "",
   boxes: [],
-  route: 'signin',
+  route: "signin",
   isProfileOpen: false,
   isSignedIn: false,
   user: {
-    id: '',
-    name: '',
-    email: '',
+    id: "",
+    name: "",
+    email: "",
     entries: 0,
-    joined: '',
+    joined: "",
     age: 0,
-    pet: ''
+    pet: ""
   }
-}
+};
 
 class App extends Component {
   constructor() {
@@ -48,50 +48,52 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const token = window.sessionStorage.getItem('token');
+    const token = window.sessionStorage.getItem("token");
     if (token) {
-      fetch('http://localhost:3000/signin', {
-        method: 'POST',
+      fetch("https://smartbrain-apps.herokuapp.com/signin", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
+          "Content-Type": "application/json",
+          Authorization: token
         }
       })
         .then(response => response.json())
         .then(data => {
           if (data && data.id) {
-            fetch(`http://localhost:3000/profile/${data.id}`, {
-              method: 'GET',
+            fetch(`https://smartbrain-apps.herokuapp.com/${data.id}`, {
+              method: "GET",
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+                "Content-Type": "application/json",
+                Authorization: token
               }
             })
-            .then(response => response.json())
-            .then(user => {
-              if (user && user.email) {
-                this.loadUser(user)
-                this.onRouteChange('home');
-              }
-            })
+              .then(response => response.json())
+              .then(user => {
+                if (user && user.email) {
+                  this.loadUser(user);
+                  this.onRouteChange("home");
+                }
+              });
           }
         })
-        .catch(console.log)
+        .catch(console.log);
     }
   }
 
-  loadUser = (data) => {
-    this.setState({user: {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      entries: data.entries,
-      joined: data.joined
-    }})
-  }
+  loadUser = data => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    });
+  };
 
-  calculateFaceLocation = (data) => {
-    const image = document.getElementById('inputimage');
+  calculateFaceLocation = data => {
+    const image = document.getElementById("inputimage");
     const width = Number(image.width);
     const height = Number(image.height);
     return data.outputs[0].data.regions.map(face => {
@@ -99,42 +101,42 @@ class App extends Component {
       return {
         leftCol: clarifaiFace.left_col * width,
         topRow: clarifaiFace.top_row * height,
-        rightCol: width - (clarifaiFace.right_col * width),
-        bottomRow: height - (clarifaiFace.bottom_row * height)
-      }
+        rightCol: width - clarifaiFace.right_col * width,
+        bottomRow: height - clarifaiFace.bottom_row * height
+      };
     });
-  }
+  };
 
-  displayFaceBox = (boxes) => {
-    this.setState({boxes: boxes});
-  }
+  displayFaceBox = boxes => {
+    this.setState({ boxes: boxes });
+  };
 
-  onInputChange = (event) => {
-    this.setState({input: event.target.value});
-  }
+  onInputChange = event => {
+    this.setState({ input: event.target.value });
+  };
 
   onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input});
-      // fetch('https://pacific-chamber-52865.herokuapp.com/imageurl', {
-      fetch('http://localhost:3000/imageurl', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': window.sessionStorage.getItem('token')
-        },
-        body: JSON.stringify({
-          input: this.state.input
-        })
+    this.setState({ imageUrl: this.state.input });
+    // fetch('https://pacific-chamber-52865.herokuapp.com/imageurl', {
+    fetch("https://smartbrain-apps.herokuapp.com/imageurl", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: window.sessionStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        input: this.state.input
       })
+    })
       .then(response => response.json())
       .then(response => {
         if (response) {
           // fetch('https://pacific-chamber-52865.herokuapp.com/image', {
-          fetch('http://localhost:3000/image', {
-            method: 'put',
+          fetch("https://smartbrain-apps.herokuapp.com/image", {
+            method: "put",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': window.sessionStorage.getItem('token')
+              "Content-Type": "application/json",
+              Authorization: window.sessionStorage.getItem("token")
             },
             body: JSON.stringify({
               id: this.state.user.id
@@ -142,65 +144,79 @@ class App extends Component {
           })
             .then(response => response.json())
             .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count}))
+              this.setState(Object.assign(this.state.user, { entries: count }));
             })
-            .catch(console.log)
-
+            .catch(console.log);
         }
-        this.displayFaceBox(this.calculateFaceLocation(response))
+        this.displayFaceBox(this.calculateFaceLocation(response));
       })
       .catch(err => console.log(err));
-  }
+  };
 
-  onRouteChange = (route) => {
-    if (route === 'signout') {
-      return this.setState(initialState)
-    } else if (route === 'home') {
-      this.setState({isSignedIn: true})
+  onRouteChange = route => {
+    if (route === "signout") {
+      return this.setState(initialState);
+    } else if (route === "home") {
+      this.setState({ isSignedIn: true });
     }
-    this.setState({route: route});
-  }
+    this.setState({ route: route });
+  };
 
   toggleModal = () => {
     this.setState(state => ({
       ...state,
-      isProfileOpen: !state.isProfileOpen,
+      isProfileOpen: !state.isProfileOpen
     }));
-  }
+  };
 
   render() {
-    const { isSignedIn, imageUrl, route, boxes, isProfileOpen, user } = this.state;
+    const {
+      isSignedIn,
+      imageUrl,
+      route,
+      boxes,
+      isProfileOpen,
+      user
+    } = this.state;
     return (
       <div className="App">
-        <Particles className='particles'
-          params={particlesOptions}
+        <Particles className="particles" params={particlesOptions} />
+        <Navigation
+          isSignedIn={isSignedIn}
+          onRouteChange={this.onRouteChange}
+          toggleModal={this.toggleModal}
         />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/>
-        {
-          isProfileOpen &&
+        {isProfileOpen && (
           <Modal>
-            <Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} user={user} loadUser={this.loadUser} />
+            <Profile
+              isProfileOpen={isProfileOpen}
+              toggleModal={this.toggleModal}
+              user={user}
+              loadUser={this.loadUser}
+            />
           </Modal>
-        }
-        { route === 'home'
-          ? <div>
-              <Logo />
-              <Rank
-                name={this.state.user.name}
-                entries={this.state.user.entries}
-              />
-              <ImageLinkForm
-                onInputChange={this.onInputChange}
-                onButtonSubmit={this.onButtonSubmit}
-              />
-              <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
-            </div>
-          : (
-             route === 'signin'
-             ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
-             : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
-            )
-        }
+        )}
+        {route === "home" ? (
+          <div>
+            <Logo />
+            <Rank
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            />
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSubmit}
+            />
+            <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
+          </div>
+        ) : route === "signin" ? (
+          <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+        ) : (
+          <Register
+            loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
+          />
+        )}
       </div>
     );
   }
