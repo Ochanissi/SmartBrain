@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import Particles from "react-particles-js";
-import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
-import Navigation from "./components/Navigation/Navigation";
-import SignIn from "./components/SignIn/SignIn";
-import Register from "./components/Register/Register";
-import Logo from "./components/Logo/Logo";
-import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
-import Rank from "./components/Rank/Rank";
-import Profile from "./components/Profile/Profile";
-import Modal from "./components/Modal/Modal";
-import "./App.css";
+import React, { Component } from 'react';
+import Particles from 'react-particles-js';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import Navigation from './components/Navigation/Navigation';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
+import Logo from './components/Logo/Logo';
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import Rank from './components/Rank/Rank';
+import Profile from './components/Profile/Profile';
+import Modal from './components/Modal/Modal';
+import './App.css';
 
 const particlesOptions = {
   particles: {
@@ -24,20 +24,20 @@ const particlesOptions = {
 };
 
 const initialState = {
-  input: "",
-  imageUrl: "",
+  input: '',
+  imageUrl: '',
   boxes: [],
-  route: "signin",
+  route: 'signin',
   isProfileOpen: false,
   isSignedIn: false,
   user: {
-    id: "",
-    name: "",
-    email: "",
+    id: '',
+    name: '',
+    email: '',
     entries: 0,
-    joined: "",
+    joined: '',
     age: 0,
-    pet: ""
+    pet: ''
   }
 };
 
@@ -48,30 +48,33 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const token = window.sessionStorage.getItem("token");
+    const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch("https://smartbrain-apps.herokuapp.com/signin", {
-        method: "POST",
+      fetch('https://smartbrain-apps-be.herokuapp.com/signin', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: token
         }
       })
         .then(response => response.json())
         .then(data => {
           if (data && data.id) {
-            fetch(`https://smartbrain-apps.herokuapp.com/${data.id}`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: token
+            fetch(
+              `https://smartbrain-apps-be.herokuapp.com/profile/${data.id}`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: token
+                }
               }
-            })
+            )
               .then(response => response.json())
               .then(user => {
                 if (user && user.email) {
                   this.loadUser(user);
-                  this.onRouteChange("home");
+                  this.onRouteChange('home');
                 }
               });
           }
@@ -87,13 +90,15 @@ class App extends Component {
         name: data.name,
         email: data.email,
         entries: data.entries,
-        joined: data.joined
+        joined: data.joined,
+        age: data.age,
+        pet: data.pet
       }
     });
   };
 
   calculateFaceLocation = data => {
-    const image = document.getElementById("inputimage");
+    const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
     return data.outputs[0].data.regions.map(face => {
@@ -117,12 +122,11 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    // fetch('https://pacific-chamber-52865.herokuapp.com/imageurl', {
-    fetch("https://smartbrain-apps.herokuapp.com/imageurl", {
-      method: "post",
+    fetch('https://smartbrain-apps-be.herokuapp.com/imageurl', {
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: window.sessionStorage.getItem("token")
+        'Content-Type': 'application/json',
+        Authorization: window.sessionStorage.getItem('token')
       },
       body: JSON.stringify({
         input: this.state.input
@@ -131,12 +135,11 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          // fetch('https://pacific-chamber-52865.herokuapp.com/image', {
-          fetch("https://smartbrain-apps.herokuapp.com/image", {
-            method: "put",
+          fetch('https://smartbrain-apps-be.herokuapp.com/image', {
+            method: 'put',
             headers: {
-              "Content-Type": "application/json",
-              Authorization: window.sessionStorage.getItem("token")
+              'Content-Type': 'application/json',
+              Authorization: window.sessionStorage.getItem('token')
             },
             body: JSON.stringify({
               id: this.state.user.id
@@ -154,9 +157,9 @@ class App extends Component {
   };
 
   onRouteChange = route => {
-    if (route === "signout") {
+    if (route === 'signout') {
       return this.setState(initialState);
-    } else if (route === "home") {
+    } else if (route === 'home') {
       this.setState({ isSignedIn: true });
     }
     this.setState({ route: route });
@@ -179,8 +182,8 @@ class App extends Component {
       user
     } = this.state;
     return (
-      <div className="App">
-        <Particles className="particles" params={particlesOptions} />
+      <div className='App'>
+        <Particles className='particles' params={particlesOptions} />
         <Navigation
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
@@ -196,7 +199,7 @@ class App extends Component {
             />
           </Modal>
         )}
-        {route === "home" ? (
+        {route === 'home' ? (
           <div>
             <Logo />
             <Rank
@@ -209,7 +212,7 @@ class App extends Component {
             />
             <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
           </div>
-        ) : route === "signin" ? (
+        ) : route === 'signin' ? (
           <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register
