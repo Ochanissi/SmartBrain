@@ -34,7 +34,7 @@ class ProfileIcon extends React.Component {
             <img
               src={accounticon}
               className="br4 h3 w3 dib"
-              style={{ border: '2px solid #FFB6C1' }}
+              style={{ border: '2px solid #3366ff', borderRadius: '14px' }}
               alt="avatar"
             />
           </DropdownToggle>
