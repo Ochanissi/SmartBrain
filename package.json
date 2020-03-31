@@ -40,7 +40,6 @@
   "bugs": {
     "url": "https://github.com/Ochanissi/SmartBrain/issues"
   },
-  "homepage": "",
   "devDependencies": {
     "style-loader": "^0.23.1"
   }
