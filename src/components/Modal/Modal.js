@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './Modal.css';
+import './modal.css';
 
 const modalRoot = document.getElementById('modal-root');
 
