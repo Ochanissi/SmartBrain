@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Profile.css';
+import './profile.css';
 import accounticon from './default.jpg';
 
 class Profile extends Component {

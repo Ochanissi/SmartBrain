@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfileIcon from '../Profile/ProfileIcon';
+import ProfileIcon from '../Profile/profileicon';
 
 const Navigation = ({ onRouteChange, isSignedIn, toggleModal }) => {
   if (isSignedIn) {
