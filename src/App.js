@@ -182,8 +182,8 @@ class App extends Component {
       user
     } = this.state;
     return (
-      <div className='App'>
-        <Particles className='particles' params={particlesOptions} />
+      <div className="App">
+        <Particles className="particles" params={particlesOptions} />
         <Navigation
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
