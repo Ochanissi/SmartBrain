@@ -61,7 +61,7 @@ class Profile extends Component {
             <img
               src={accounticon}
               className="h3 w3 dib"
-              style={{ border: '2px solid #FFB6C1' }}
+              style={{ border: '2px solid #3366ff', borderRadius: '14px' }}
               alt="avatar"
             />
             <h1>{name}</h1>
