@@ -17,10 +17,10 @@ const particlesOptions = {
       value: 30,
       density: {
         enable: true,
-        value_area: 800
-      }
-    }
-  }
+        value_area: 800,
+      },
+    },
+  },
 };
 
 const initialState = {
@@ -37,8 +37,8 @@ const initialState = {
     entries: 0,
     joined: '',
     age: 0,
-    pet: ''
-  }
+    pet: '',
+  },
 };
 
 class App extends Component {
@@ -50,28 +50,25 @@ class App extends Component {
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch('https://smartbrain-apps-be.herokuapp.com/signin', {
+      fetch('https://smartbrain-api.ochanissi.com/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: token
-        }
+          Authorization: token,
+        },
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data && data.id) {
-            fetch(
-              `https://smartbrain-apps-be.herokuapp.com/profile/${data.id}`,
-              {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: token
-                }
-              }
-            )
-              .then(response => response.json())
-              .then(user => {
+            fetch(`https://smartbrain-api.ochanissi.com/profile/${data.id}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: token,
+              },
+            })
+              .then((response) => response.json())
+              .then((user) => {
                 if (user && user.email) {
                   this.loadUser(user);
                   this.onRouteChange('home');
@@ -83,7 +80,7 @@ class App extends Component {
     }
   }
 
-  loadUser = data => {
+  loadUser = (data) => {
     this.setState({
       user: {
         id: data.id,
@@ -92,71 +89,71 @@ class App extends Component {
         entries: data.entries,
         joined: data.joined,
         age: data.age,
-        pet: data.pet
-      }
+        pet: data.pet,
+      },
     });
   };
 
-  calculateFaceLocation = data => {
+  calculateFaceLocation = (data) => {
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
-    return data.outputs[0].data.regions.map(face => {
+    return data.outputs[0].data.regions.map((face) => {
       const clarifaiFace = face.region_info.bounding_box;
       return {
         leftCol: clarifaiFace.left_col * width,
         topRow: clarifaiFace.top_row * height,
         rightCol: width - clarifaiFace.right_col * width,
-        bottomRow: height - clarifaiFace.bottom_row * height
+        bottomRow: height - clarifaiFace.bottom_row * height,
       };
     });
   };
 
-  displayFaceBox = boxes => {
+  displayFaceBox = (boxes) => {
     this.setState({ boxes: boxes });
   };
 
-  onInputChange = event => {
+  onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch('https://smartbrain-apps-be.herokuapp.com/imageurl', {
+    fetch('https://smartbrain-api.ochanissi.com/imageurl', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: window.sessionStorage.getItem('token')
+        Authorization: window.sessionStorage.getItem('token'),
       },
       body: JSON.stringify({
-        input: this.state.input
-      })
+        input: this.state.input,
+      }),
     })
-      .then(response => response.json())
-      .then(response => {
+      .then((response) => response.json())
+      .then((response) => {
         if (response) {
-          fetch('https://smartbrain-apps-be.herokuapp.com/image', {
+          fetch('https://smartbrain-api.ochanissi.com/image', {
             method: 'put',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: window.sessionStorage.getItem('token')
+              Authorization: window.sessionStorage.getItem('token'),
             },
             body: JSON.stringify({
-              id: this.state.user.id
-            })
+              id: this.state.user.id,
+            }),
           })
-            .then(response => response.json())
-            .then(count => {
+            .then((response) => response.json())
+            .then((count) => {
               this.setState(Object.assign(this.state.user, { entries: count }));
             })
             .catch(console.log);
         }
         this.displayFaceBox(this.calculateFaceLocation(response));
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
-  onRouteChange = route => {
+  onRouteChange = (route) => {
     if (route === 'signout') {
       return this.setState(initialState);
     } else if (route === 'home') {
@@ -166,9 +163,9 @@ class App extends Component {
   };
 
   toggleModal = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       ...state,
-      isProfileOpen: !state.isProfileOpen
+      isProfileOpen: !state.isProfileOpen,
     }));
   };
 
@@ -179,11 +176,11 @@ class App extends Component {
       route,
       boxes,
       isProfileOpen,
-      user
+      user,
     } = this.state;
     return (
-      <div className="App">
-        <Particles className="particles" params={particlesOptions} />
+      <div className='App'>
+        <Particles className='particles' params={particlesOptions} />
         <Navigation
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
