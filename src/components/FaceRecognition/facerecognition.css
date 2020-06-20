@@ -1,8 +1,36 @@
 .bounding-box {
-    position: absolute;
-    box-shadow: 0 0 0 3px #149df2 inset;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    cursor: pointer;
+  position: absolute;
+  box-shadow: 0 0 0 3px #149df2 inset;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#inputimage {
+  width: 700px;
+}
+
+@media screen and (max-width: 750px) {
+  #inputimage {
+    width: 500px;
   }
+}
+
+@media screen and (max-width: 550px) {
+  #inputimage {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  #inputimage {
+    width: 300px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  #inputimage {
+    width: 275px;
+  }
+}

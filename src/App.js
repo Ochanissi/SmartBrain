@@ -14,7 +14,7 @@ import './App.css';
 const particlesOptions = {
   particles: {
     number: {
-      value: 30,
+      value: 100,
       density: {
         enable: true,
         value_area: 800,
@@ -197,7 +197,7 @@ class App extends Component {
           </Modal>
         )}
         {route === 'home' ? (
-          <div>
+          <div className='mh3'>
             <Logo />
             <Rank
               name={this.state.user.name}

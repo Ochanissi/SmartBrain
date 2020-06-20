@@ -12,3 +12,14 @@
   border-radius: 14px;
   background-size: 40px 60px;
 }
+
+@media screen and (max-width: 450px) {
+  #imagelinkform-container {
+    padding: 10px;
+  }
+
+  #imagelinkform-button {
+    padding: 10px 5px;
+    min-width: 86px;
+  }
+}

@@ -3,7 +3,7 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from 'reactstrap';
 import accounticon from './default.jpg';
 
@@ -11,40 +11,40 @@ class ProfileIcon extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownOpen: false
+      dropdownOpen: false,
     };
   }
 
   toggle = () => {
     this.setState({
-      dropdownOpen: !this.state.dropdownOpen
+      dropdownOpen: !this.state.dropdownOpen,
     });
   };
 
   render() {
     return (
-      <div className="pa4 tc">
+      <div className='pa4 tc'>
         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
           <DropdownToggle
-            tag="span"
+            tag='span'
             onClick={this.toggle}
-            data-toggle="dropdown"
+            data-toggle='dropdown'
             aria-expanded={this.state.dropdownOpen}
           >
             <img
               src={accounticon}
-              className="br4 h3 w3 dib"
-              style={{ border: '2px solid #3366ff', borderRadius: '14px' }}
-              alt="avatar"
+              className='br4 h3 w3 dib pointer grow dib'
+              style={{ border: '2px solid #3366ff', borderRadius: '5px' }}
+              alt='avatar'
             />
           </DropdownToggle>
           <DropdownMenu
-            className="b--transparent shadow-5"
+            className='b--transparent shadow-5'
             style={{
               marginTop: '15px',
               backgroundColor: 'rgba(255, 255, 255, 0.5)',
               right: '0',
-              left: 'auto'
+              left: 'auto',
             }}
             right
           >
